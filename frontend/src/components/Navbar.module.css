@@ -1,0 +1,140 @@
+.navbar {
+  padding: 1.5rem 0;
+  width: 100%;
+}
+
+.light {
+  background-color: var(--bg-white);
+  color: var(--text-dark);
+}
+
+.dark {
+  background-color: var(--primary-dark);
+  color: white;
+}
+
+.navContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.light .logoIcon {
+  color: var(--primary-green);
+}
+
+.dark .logoIcon {
+  color: var(--light-mint);
+}
+
+.logoText h1 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 0.1rem;
+}
+
+.logoText p {
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.light .logoText h1 { color: var(--primary-dark); }
+.light .logoText p { color: var(--text-gray); }
+.dark .logoText h1 { color: white; }
+.dark .logoText p { color: #a7d0b8; }
+
+.navLinks {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.link:hover {
+  opacity: 0.8;
+}
+
+.loginBtn {
+  background-color: var(--primary-green);
+  color: white;
+  padding: 0.6rem 1.5rem;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: background-color 0.2s;
+}
+
+.loginBtn:hover {
+  background-color: var(--primary-dark);
+}
+
+.userProfile {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.logoutBtn {
+  color: inherit;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.logoutBtn:hover {
+  opacity: 1;
+}
+
+.listAssetBtn {
+  background-color: transparent;
+  border: 2px solid var(--primary-green);
+  color: var(--primary-green);
+  padding: 0.5rem 1.1rem;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: all 0.2s;
+}
+
+.dark .listAssetBtn {
+  border-color: white;
+  color: white;
+}
+
+.listAssetBtn:hover {
+  background-color: var(--primary-green);
+  color: white;
+}
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: white;
+  color: var(--primary-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.profileLinkWrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: inherit;
+}
+
+.profileLinkWrapper:hover span {
+  text-decoration: underline;
+}

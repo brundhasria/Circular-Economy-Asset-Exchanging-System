@@ -1,0 +1,337 @@
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+.modalContent {
+  background-color: white;
+  padding: 2.5rem;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 560px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Listing Type Grid */
+.listingTypeSection {
+  margin-bottom: 0.5rem;
+}
+
+.sectionLabel {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 0.8rem;
+  display: block;
+}
+
+.listingTypeGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
+}
+
+.listingTypeCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.8rem 0.2rem;
+  border: 2px solid var(--border-gray);
+  border-radius: 10px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.listingTypeCard span {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.listingTypeCard:hover {
+  border-color: #ccc;
+  background-color: #f8f9fa;
+}
+
+/* Image Upload */
+.imageUploadArea {
+  margin-bottom: 0.5rem;
+}
+
+.imageLabel {
+  display: block;
+  cursor: pointer;
+}
+
+.imagePlaceholder {
+  border: 2px dashed var(--border-gray);
+  border-radius: 10px;
+  padding: 2rem;
+  text-align: center;
+  color: var(--text-gray);
+  transition: border-color 0.2s, background-color 0.2s;
+}
+
+.imagePlaceholder:hover {
+  border-color: var(--primary-green);
+  background-color: var(--light-mint);
+}
+
+.imagePlaceholder p {
+  margin-top: 0.5rem;
+  font-weight: 600;
+}
+
+.imagePlaceholder span {
+  font-size: 0.8rem;
+}
+
+.imagePreview {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.hiddenInput {
+  display: none;
+}
+
+.removeImage {
+  color: #e53935;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-top: 0.5rem;
+}
+
+/* Modal Header */
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.modalHeader h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.closeBtn {
+  color: var(--text-gray);
+  transition: color 0.2s;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.closeBtn:hover {
+  color: var(--text-dark);
+}
+
+/* Form */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1;
+}
+
+.inputGroup label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.inputGroup input,
+.inputGroup select,
+.textarea {
+  padding: 0.8rem 1rem;
+  border: 1px solid var(--border-gray);
+  border-radius: 8px;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s;
+  font-family: inherit;
+}
+
+.inputGroup input:focus,
+.inputGroup select:focus,
+.textarea:focus {
+  border-color: var(--primary-green);
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.row {
+  display: flex;
+  gap: 1rem;
+}
+
+.contactSection {
+  background-color: #f8f9fa;
+  padding: 1rem;
+  border-radius: 10px;
+  border: 1px solid var(--border-gray);
+}
+
+/* AI Valuation Section */
+.valuationSection {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-end;
+  margin-top: 0.5rem;
+  background-color: var(--bg-offwhite);
+  padding: 1rem;
+  border-radius: 12px;
+  border: 1px dashed var(--primary-green);
+}
+
+.valueInputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.currency {
+  position: absolute;
+  left: 1rem;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.valueInputWrapper input {
+  padding-left: 2rem;
+  width: 100%;
+}
+
+.aiGlow {
+  border-color: var(--primary-green) !important;
+  box-shadow: 0 0 10px rgba(10, 115, 56, 0.2);
+  animation: pulseGlow 2s infinite;
+}
+
+@keyframes pulseGlow {
+  0% {
+    box-shadow: 0 0 0 0 rgba(10, 115, 56, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(10, 115, 56, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(10, 115, 56, 0);
+  }
+}
+
+.aiBtn {
+  background: linear-gradient(135deg, #0a7338 0%, #075227 100%);
+  color: white;
+  padding: 0.8rem 1.2rem;
+  border-radius: 8px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+  transition: transform 0.2s, box-shadow 0.2s;
+  border: none;
+  cursor: pointer;
+}
+
+.aiBtn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(10, 115, 56, 0.3);
+}
+
+.aiBtn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.aiReasoningBox {
+  background-color: var(--light-mint);
+  color: var(--primary-dark);
+  padding: 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.submitBtn {
+  background-color: var(--text-dark);
+  color: white;
+  padding: 1rem;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin-top: 1rem;
+  transition: opacity 0.2s;
+  border: none;
+  cursor: pointer;
+}
+
+.submitBtn:hover {
+  opacity: 0.9;
+}
+
+.submitBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.aiTextBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 0.2rem 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-left: 0.5rem;
+  transition: opacity 0.2s;
+}
+.aiTextBtn:hover:not(:disabled) {
+  opacity: 0.9;
+}
+.aiTextBtn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
