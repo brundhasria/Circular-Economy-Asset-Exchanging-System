@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '../config';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeftRight, DollarSign, Recycle, Gift, MapPin, Search, Image as ImageIcon, X, CheckCircle, Phone, Mail, Home, Camera, Trash2 } from 'lucide-react';
@@ -5,7 +6,7 @@ import Navbar from '../components/Navbar';
 import EditImageModal from '../components/EditImageModal';
 import styles from './BrowseAssetsPage.module.css';
 
-const BACKEND_URL = 'http://localhost:8081';
+const BACKEND_URL = API_BASE_URL;
 const CATEGORIES = ['All Categories', 'Electronics', 'Furniture', 'Books', 'Bicycle', 'Home Appliance', 'Clothing', 'Others'];
 const CONDITIONS = ['New', 'Like New', 'Good', 'Fair'];
 const LISTING_TYPES = ['All Types', 'Exchange', 'Sell', 'Recycle', 'Donate'];

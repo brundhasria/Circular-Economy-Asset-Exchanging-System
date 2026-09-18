@@ -1,8 +1,9 @@
+import { API_BASE_URL } from '../config';
 import React, { useState, useEffect } from 'react';
 import { X, Image as ImageIcon, Upload, CheckCircle } from 'lucide-react';
 import styles from './EditImageModal.module.css';
 
-const BACKEND_URL = 'http://localhost:8081';
+const BACKEND_URL = API_BASE_URL;
 
 export default function EditImageModal({ isOpen, asset, onClose, onSuccess }) {
   const [imageUrl, setImageUrl] = useState('');

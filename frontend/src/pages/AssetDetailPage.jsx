@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '../config';
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
@@ -29,7 +30,7 @@ export default function AssetDetailPage() {
   const fetchAssetDetails = async () => {
     setLoading(true);
     try {
-      const res = await fetch('http://localhost:8081/api/assets');
+      const res = await fetch(`${API_BASE_URL}/api/assets`);
       if (res.ok) {
         const data = await res.json();
         const found = data.find(a => a.id === Number(id));
@@ -75,7 +76,7 @@ export default function AssetDetailPage() {
     
     try {
       const token = localStorage.getItem('ce_token');
-      const res = await fetch(`http://localhost:8081/api/assets/${asset.id}/${endpoint}`, { 
+      const res = await fetch(`${API_BASE_URL}/api/assets/${asset.id}/${endpoint}`, { 
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`

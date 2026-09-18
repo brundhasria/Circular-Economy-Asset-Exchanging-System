@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '../config';
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
@@ -10,7 +11,7 @@ export default function LandingPage() {
   const [stats, setStats] = useState({ total: 0, available: 0, exchanged: 0, sold: 0, recycled: 0, donated: 0 });
 
   useEffect(() => {
-    fetch('http://localhost:8081/api/assets/stats')
+    fetch(`${API_BASE_URL}/api/assets/stats`)
       .then(res => res.json())
       .then(data => setStats(data))
       .catch(() => console.error("Could not fetch stats"));

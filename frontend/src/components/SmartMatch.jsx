@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '../config';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, Sparkles, ArrowRight, ExternalLink } from 'lucide-react';
@@ -19,7 +20,7 @@ export default function SmartMatch() {
     setResult(null);
 
     try {
-      const response = await fetch('http://localhost:8081/api/ai/match', {
+      const response = await fetch(`${API_BASE_URL}/api/ai/match`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ query })

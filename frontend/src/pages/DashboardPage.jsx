@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '../config';
 import React, { useState, useEffect, useRef } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -37,7 +38,7 @@ export default function DashboardPage() {
     if (!user) return;
     
     // Fetch all assets and filter client-side
-    fetch('http://localhost:8081/api/assets')
+    fetch(`${API_BASE_URL}/api/assets`)
       .then(res => res.json())
       .then(data => {
         const listed = data.filter(a => a.listedBy === user);
@@ -47,7 +48,7 @@ export default function DashboardPage() {
       })
       .catch(err => console.error("Error fetching dashboard assets:", err));
 
-    fetch('http://localhost:8081/api/assets/leaderboard')
+    fetch(`${API_BASE_URL}/api/assets/leaderboard`)
       .then(res => res.json())
       .then(data => setLeaderboard(data))
       .catch(err => console.error("Error fetching leaderboard:", err));
@@ -75,7 +76,7 @@ export default function DashboardPage() {
 
   const fetchChatMessages = () => {
     if (!activeChatAsset) return;
-    fetch(`http://localhost:8081/api/chat/${activeChatAsset.id}`)
+    fetch(`${API_BASE_URL}/api/chat/${activeChatAsset.id}`)
       .then(res => res.json())
       .then(data => setChatMessages(data))
       .catch(err => console.error("Error fetching chat messages:", err));
@@ -94,7 +95,7 @@ export default function DashboardPage() {
       message: newMessage
     };
 
-    fetch('http://localhost:8081/api/chat', {
+    fetch(`${API_BASE_URL}/api/chat`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(messageData)

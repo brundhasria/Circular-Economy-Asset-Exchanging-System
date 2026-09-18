@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '../config';
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { User, Mail, Trophy, Medal, Package, Recycle, ArrowLeftRight, Activity } from 'lucide-react';
@@ -26,7 +27,7 @@ export default function ProfilePage() {
       try {
         const token = localStorage.getItem('ce_token');
         // Fetch all assets to compute stats (in a real app, backend provides a /profile endpoint)
-        const res = await fetch('http://localhost:8081/api/assets', {
+        const res = await fetch(`${API_BASE_URL}/api/assets`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         

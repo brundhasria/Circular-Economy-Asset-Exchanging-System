@@ -1,8 +1,9 @@
+import { API_BASE_URL } from '../config';
 import React, { useState } from 'react';
 import { X, User, Lock, Mail } from 'lucide-react';
 import styles from './LoginModal.module.css';
 
-const BACKEND_URL = 'http://localhost:8081';
+const BACKEND_URL = API_BASE_URL;
 
 export default function LoginModal({ isOpen, onClose, onLogin }) {
   const [isRegister, setIsRegister] = useState(false);

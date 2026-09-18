@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '../config';
 import React, { useState } from 'react';
 import { X, Upload, ArrowLeftRight, DollarSign, Recycle, Gift, Sparkles, PenTool } from 'lucide-react';
 import styles from './AddAssetModal.module.css';
@@ -58,7 +59,7 @@ export default function AddAssetModal({ isOpen, onClose, user }) {
     setIsValuing(true);
     setAiReasoning('');
     try {
-      const response = await fetch('http://localhost:8081/api/ai/valuate', {
+      const response = await fetch(`${API_BASE_URL}/api/ai/valuate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -86,7 +87,7 @@ export default function AddAssetModal({ isOpen, onClose, user }) {
     }
     setIsDescribing(true);
     try {
-      const response = await fetch('http://localhost:8081/api/ai/describe', {
+      const response = await fetch(`${API_BASE_URL}/api/ai/describe`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -117,7 +118,7 @@ export default function AddAssetModal({ isOpen, onClose, user }) {
         payload.estimatedValue = parseFloat(payload.estimatedValue);
       }
 
-      const res = await fetch('http://localhost:8081/api/assets', {
+      const res = await fetch(`${API_BASE_URL}/api/assets`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
