@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import { X, ImageIcon, User, MapPin, Recycle, ArrowLeftRight, CheckCircle, Phone, Mail, Home, ArrowLeft } from 'lucide-react';
+import { X, ImageIcon, User, MapPin, Recycle, ArrowLeftRight, CheckCircle, Phone, Mail, Home, ArrowLeft, Camera } from 'lucide-react';
+import EditImageModal from '../components/EditImageModal';
 import styles from './BrowseAssetsPage.module.css'; // Reusing browse page styles for modals and cards
 
 export default function AssetDetailPage() {
@@ -10,9 +11,11 @@ export default function AssetDetailPage() {
   const navigate = useNavigate();
   
   const [user, setUser] = useState(() => localStorage.getItem('ce_username'));
+  const [role, setRole] = useState(() => localStorage.getItem('ce_role'));
   const [asset, setAsset] = useState(null);
   const [loading, setLoading] = useState(true);
   const [toast, setToast] = useState('');
+  const [editingImage, setEditingImage] = useState(false);
   
   const [confirmAction, setConfirmAction] = useState(null); // 'exchange' or 'recycle'
   const [successData, setSuccessData] = useState(null);
@@ -142,13 +145,17 @@ export default function AssetDetailPage() {
         <div className={styles.modalOverlay} onClick={() => setConfirmAction(null)}>
           <div className={styles.modalContent} onClick={e => e.stopPropagation()}>
             <h3 className={styles.modalTitle}>
-              {confirmAction === 'recycle' ? 'Recycle this asset?' : 'Exchange this asset?'}
+              {confirmAction === 'recycle' ? 'Recycle this asset?' :
+               asset.listingType === 'Sell' ? 'Buy this asset?' :
+               asset.listingType === 'Donate' ? 'Claim this item for free?' :
+               asset.listingType === 'Recycle' ? 'Schedule a pickup?' :
+               'Exchange this asset?'}
             </h3>
             <div className={styles.confirmBox}>
               <p>You are requesting:</p>
               <h4>{asset.title}</h4>
               <p>Condition: {asset.assetCondition}</p>
-              {asset.estimatedValue && <p>Estimated Value: ₹{asset.estimatedValue}</p>}
+              {asset.estimatedValue && <p>{asset.listingType === 'Sell' ? 'Price' : 'Estimated Value'}: ₹{asset.estimatedValue}</p>}
             </div>
             <div className={styles.confirmActions}>
               <button className={styles.cancelBtn} onClick={() => setConfirmAction(null)} disabled={actingId}>
@@ -159,7 +166,13 @@ export default function AssetDetailPage() {
                 onClick={executeAction}
                 disabled={actingId}
               >
-                {actingId ? 'Processing...' : (confirmAction === 'recycle' ? 'Confirm Recycle' : 'Confirm Exchange')}
+                {actingId ? 'Processing...' : (
+                  confirmAction === 'recycle' ? 'Confirm Recycle' :
+                  asset.listingType === 'Sell' ? 'Confirm Purchase' :
+                  asset.listingType === 'Donate' ? 'Confirm Claim' :
+                  asset.listingType === 'Recycle' ? 'Confirm Pickup' :
+                  'Confirm Exchange'
+                )}
               </button>
             </div>
           </div>
@@ -226,13 +239,33 @@ export default function AssetDetailPage() {
 
         <div style={{ backgroundColor: 'white', border: '1px solid #e0e0e0', borderRadius: '12px', padding: '2.5rem', boxShadow: '0 2px 10px rgba(0,0,0,0.03)' }}>
           <div className={styles.detailsSplit}>
-            <div className={styles.detailsImageSide}>
+            <div className={styles.detailsImageSide} style={{ position: 'relative' }}>
               {asset.imageData ? (
                 <img src={asset.imageData} alt={asset.title} className={styles.detailsImg} />
               ) : (
                 <div className={styles.noDetailsImage}><ImageIcon size={64} /></div>
               )}
+              {role === 'ADMIN' && (
+                <button
+                  className={styles.adminImageEditBtn}
+                  onClick={() => setEditingImage(true)}
+                  title="Change Asset Photo"
+                  style={{ top: '15px', right: '15px' }}
+                >
+                  <Camera size={14} /> Change Photo
+                </button>
+              )}
             </div>
+
+            <EditImageModal
+              isOpen={editingImage}
+              asset={asset}
+              onClose={() => setEditingImage(false)}
+              onSuccess={(updated) => {
+                setAsset(updated);
+                showToast('📸 Asset photo updated successfully!');
+              }}
+            />
             
             <div className={styles.detailsInfoSide}>
               <span className={styles.assetCategory}>{asset.type}</span>
@@ -273,6 +306,18 @@ export default function AssetDetailPage() {
                 ) : user === asset.listedBy ? (
                   <button className={styles.recycleActionBtn} onClick={() => initiateAction('recycle')} style={{ width: '100%', padding: '0.8rem' }}>
                     <Recycle size={18} /> Recycle Asset
+                  </button>
+                ) : asset.listingType === 'Sell' ? (
+                  <button className={styles.claimActionBtn} onClick={() => initiateAction('exchange')} style={{ width: '100%', padding: '0.8rem', backgroundColor: '#1565c0' }}>
+                    <span>💳</span> Buy Now
+                  </button>
+                ) : asset.listingType === 'Donate' ? (
+                  <button className={styles.claimActionBtn} onClick={() => initiateAction('exchange')} style={{ width: '100%', padding: '0.8rem', backgroundColor: '#6a1b9a' }}>
+                    <span>🎁</span> Claim for Free
+                  </button>
+                ) : asset.listingType === 'Recycle' ? (
+                  <button className={styles.claimActionBtn} onClick={() => initiateAction('exchange')} style={{ width: '100%', padding: '0.8rem', backgroundColor: '#e65100' }}>
+                    <Recycle size={18} /> Schedule Pickup
                   </button>
                 ) : (
                   <button className={styles.claimActionBtn} onClick={() => initiateAction('exchange')} style={{ width: '100%', padding: '0.8rem' }}>

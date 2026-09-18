@@ -26,6 +26,7 @@ public class User {
 
     private Integer ecoPoints = 0;
     private String createdAt;
+    private String role = "USER"; // USER or ADMIN
 
     public User() {}
 
@@ -35,6 +36,16 @@ public class User {
         this.password = password;
         this.createdAt = createdAt;
         this.ecoPoints = 0;
+        this.role = "USER";
+    }
+
+    public User(String username, String email, String password, String createdAt, String role) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.createdAt = createdAt;
+        this.ecoPoints = 0;
+        this.role = role;
     }
 
     public Long getId() { return id; }
@@ -54,4 +65,7 @@ public class User {
 
     public String getCreatedAt() { return createdAt; }
     public void setCreatedAt(String createdAt) { this.createdAt = createdAt; }
+
+    public String getRole() { return role; }
+    public void setRole(String role) { this.role = role; }
 }

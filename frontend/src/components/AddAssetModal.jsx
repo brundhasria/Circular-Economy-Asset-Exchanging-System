@@ -110,14 +110,25 @@ export default function AddAssetModal({ isOpen, onClose, user }) {
     setIsSubmitting(true);
     try {
       const token = localStorage.getItem('ce_token');
+      const payload = { ...formData, listedBy: user || 'Anonymous' };
+      if (payload.estimatedValue === '') {
+        payload.estimatedValue = null;
+      } else {
+        payload.estimatedValue = parseFloat(payload.estimatedValue);
+      }
+
       const res = await fetch('http://localhost:8081/api/assets', {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}` 
         },
-        body: JSON.stringify({ ...formData, listedBy: user || 'Anonymous' })
+        body: JSON.stringify(payload)
       });
+      
+      if (!res.ok) {
+        throw new Error(`Server returned ${res.status}`);
+      }
       setFormData({
         title: '', type: 'Electronics', assetCondition: 'Good', location: '',
         estimatedValue: '', listingType: 'Exchange', address: '',
@@ -130,7 +141,11 @@ export default function AddAssetModal({ isOpen, onClose, user }) {
       window.location.reload();
     } catch (error) {
       console.error('Submit error:', error);
-      alert('Could not save asset. Is the backend running?');
+      if (error.message && error.message.includes('401')) {
+        alert('Session expired. Please log out and log back in, then try again.');
+      } else {
+        alert('Could not save asset. Is the backend running?');
+      }
     } finally {
       setIsSubmitting(false);
     }

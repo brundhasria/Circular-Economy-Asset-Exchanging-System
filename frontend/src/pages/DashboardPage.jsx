@@ -114,6 +114,7 @@ export default function DashboardPage() {
   const handleLogout = () => {
     localStorage.removeItem('ce_token');
     localStorage.removeItem('ce_username');
+    localStorage.removeItem('ce_role');
     setUser(null);
   };
 

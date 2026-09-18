@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
-import { X, User, Lock } from 'lucide-react';
+import { X, User, Lock, Mail } from 'lucide-react';
 import styles from './LoginModal.module.css';
+
+const BACKEND_URL = 'http://localhost:8081';
 
 export default function LoginModal({ isOpen, onClose, onLogin }) {
   const [isRegister, setIsRegister] = useState(false);
-  const [formData, setFormData] = useState({ username: '', password: '' });
+  const [formData, setFormData] = useState({ username: '', email: '', password: '' });
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   if (!isOpen) return null;
 
@@ -14,34 +17,57 @@ export default function LoginModal({ isOpen, onClose, onLogin }) {
     setError('');
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.username.trim() || !formData.password.trim()) {
       setError('Please fill in all fields.');
       return;
     }
-    if (formData.password.length < 4) {
-      setError('Password must be at least 4 characters.');
-      return;
-    }
-    // Simple client-side auth (saves to localStorage for demo)
-    const users = JSON.parse(localStorage.getItem('ce_users') || '{}');
-    if (isRegister) {
-      if (users[formData.username]) {
-        setError('Username already exists. Please login.');
-        return;
+    setLoading(true);
+    setError('');
+
+    try {
+      if (isRegister) {
+        if (!formData.email.trim()) { setError('Email is required.'); setLoading(false); return; }
+        const res = await fetch(`${BACKEND_URL}/api/auth/register`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username: formData.username, email: formData.email, password: formData.password }),
+        });
+        const data = await res.json();
+        if (!res.ok) { setError(data.message || 'Registration failed.'); setLoading(false); return; }
+        // Auto-login after register
+        const loginRes = await fetch(`${BACKEND_URL}/api/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username: formData.username, password: formData.password }),
+        });
+        const loginData = await loginRes.json();
+        if (!loginRes.ok) { setError('Registered! Please login.'); setLoading(false); setIsRegister(false); return; }
+        localStorage.setItem('ce_token', loginData.token);
+        localStorage.setItem('ce_username', loginData.username);
+        localStorage.setItem('ce_role', loginData.role || 'USER');
+        onLogin(loginData.username);
+        onClose();
+      } else {
+        const res = await fetch(`${BACKEND_URL}/api/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username: formData.username, password: formData.password }),
+        });
+        const data = await res.json();
+        if (!res.ok) { setError(data.message || 'Invalid username or password.'); setLoading(false); return; }
+        localStorage.setItem('ce_token', data.token);
+        localStorage.setItem('ce_username', data.username);
+        localStorage.setItem('ce_role', data.role || 'USER');
+        onLogin(data.username);
+        onClose();
       }
-      users[formData.username] = formData.password;
-      localStorage.setItem('ce_users', JSON.stringify(users));
-    } else {
-      if (!users[formData.username] || users[formData.username] !== formData.password) {
-        setError('Invalid username or password.');
-        return;
-      }
+    } catch {
+      setError('Cannot connect to server. Is the backend running?');
+    } finally {
+      setLoading(false);
     }
-    localStorage.setItem('ce_logged_in_user', formData.username);
-    onLogin(formData.username);
-    onClose();
   };
 
   return (
@@ -67,6 +93,19 @@ export default function LoginModal({ isOpen, onClose, onLogin }) {
               autoComplete="off"
             />
           </div>
+          {isRegister && (
+            <div className={styles.inputGroup}>
+              <Mail size={16} className={styles.inputIcon} />
+              <input
+                type="email"
+                name="email"
+                placeholder="Email"
+                value={formData.email}
+                onChange={handleChange}
+                autoComplete="off"
+              />
+            </div>
+          )}
           <div className={styles.inputGroup}>
             <Lock size={16} className={styles.inputIcon} />
             <input
@@ -78,8 +117,8 @@ export default function LoginModal({ isOpen, onClose, onLogin }) {
             />
           </div>
           {error && <p className={styles.error}>{error}</p>}
-          <button type="submit" className={styles.submitBtn}>
-            {isRegister ? 'Register' : 'Login'}
+          <button type="submit" className={styles.submitBtn} disabled={loading}>
+            {loading ? 'Please wait...' : (isRegister ? 'Register' : 'Login')}
           </button>
         </form>
 

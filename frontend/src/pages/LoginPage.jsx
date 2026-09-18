@@ -34,6 +34,7 @@ export default function LoginPage() {
         const data = await res.json();
         localStorage.setItem('ce_token', data.token);
         localStorage.setItem('ce_username', data.username);
+        localStorage.setItem('ce_role', data.role || 'USER');
         // Clean up old mock logic if exists
         localStorage.removeItem('ce_logged_in_user');
         

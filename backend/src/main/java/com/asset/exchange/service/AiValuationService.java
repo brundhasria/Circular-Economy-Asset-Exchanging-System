@@ -3,12 +3,66 @@ package com.asset.exchange.service;
 import org.springframework.stereotype.Service;
 import java.util.Random;
 
+import org.springframework.web.client.RestTemplate;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.ResponseEntity;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.JsonNode;
+
 @Service
 public class AiValuationService {
 
     private final Random random = new Random();
 
     public String evaluateAsset(String type, String title, String condition, String location) {
+        String apiKey = System.getenv("GCP_API_KEY");
+        if (apiKey == null || apiKey.isEmpty()) {
+            System.out.println("No GCP_API_KEY found. Falling back to heuristic valuation.");
+            return fallbackEvaluateAsset(type, title, condition, location);
+        }
+
+        try {
+            RestTemplate restTemplate = new RestTemplate();
+            String url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + apiKey;
+            
+            String prompt = String.format("Estimate the fair market resale value in INR for a used '%s' (Category: %s) in '%s' condition located in %s. Return only a strict JSON object with two fields: 'estimatedValue' (an integer) and 'reasoning' (a short 1-sentence string explaining why). Do not include any markdown formatting like ```json.", title, type, condition, location);
+            
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            
+            // properly escape quotes in the prompt
+            String escapedPrompt = prompt.replace("\"", "\\\"");
+            String requestBody = "{\"contents\": [{\"parts\": [{\"text\": \"" + escapedPrompt + "\"}]}]}";
+            HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
+            
+            ResponseEntity<String> response = restTemplate.postForEntity(url, entity, String.class);
+            
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode rootNode = mapper.readTree(response.getBody());
+            String textResponse = rootNode.path("candidates").get(0).path("content").path("parts").get(0).path("text").asText();
+            
+            // Clean up accidental markdown
+            if (textResponse.contains("```json")) {
+                textResponse = textResponse.replace("```json", "").replace("```", "").trim();
+            } else if (textResponse.contains("```")) {
+                textResponse = textResponse.replace("```", "").trim();
+            }
+            
+            // verify it parses as JSON before returning
+            mapper.readTree(textResponse);
+            
+            return textResponse;
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Gemini API call failed. Falling back to heuristic valuation.");
+            return fallbackEvaluateAsset(type, title, condition, location);
+        }
+    }
+
+    private String fallbackEvaluateAsset(String type, String title, String condition, String location) {
         try {
             int baseValue = 1000;
             switch (type.toLowerCase()) {
