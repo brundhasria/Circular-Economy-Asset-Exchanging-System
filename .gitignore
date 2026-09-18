@@ -25,3 +25,5 @@ target/
 .settings/
 .DS_Store
 *.log
+*.docx
+*.doc
