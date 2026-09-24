@@ -10,7 +10,7 @@ const LISTING_TYPES = [
   { value: 'Donate', icon: Gift, color: '#6a1b9a', label: 'Donate' },
 ];
 
-export default function AddAssetModal({ isOpen, onClose, user }) {
+export default function AddAssetModal({ isOpen, onClose, user, onAssetAdded }) {
   const [formData, setFormData] = useState({
     title: '',
     type: 'Electronics',
@@ -139,7 +139,9 @@ export default function AddAssetModal({ isOpen, onClose, user }) {
       setAiReasoning('');
       localStorage.setItem('ce_listing_success', 'true');
       onClose();
-      window.location.reload();
+      if (onAssetAdded) {
+        onAssetAdded();
+      }
     } catch (error) {
       console.error('Submit error:', error);
       if (error.message && error.message.includes('401')) {

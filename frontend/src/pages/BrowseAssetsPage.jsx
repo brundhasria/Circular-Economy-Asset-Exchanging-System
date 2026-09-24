@@ -148,7 +148,7 @@ export default function BrowseAssetsPage() {
 
   return (
     <div className={styles.page}>
-      <Navbar variant="dark" user={user} onLogout={handleLogout} />
+      <Navbar variant="dark" user={user} onLogout={handleLogout} onAssetAdded={fetchAssets} />
 
       {toast && <div className={styles.toast}>{toast}</div>}
 

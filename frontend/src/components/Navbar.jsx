@@ -4,7 +4,7 @@ import { Recycle, PlusCircle, LogOut, Moon, Sun, User } from 'lucide-react';
 import AddAssetModal from './AddAssetModal';
 import styles from './Navbar.module.css';
 
-export default function Navbar({ variant = 'light', user, onLogin, onLogout }) {
+export default function Navbar({ variant = 'light', user, onLogin, onLogout, onAssetAdded }) {
   const isDark = variant === 'dark';
   const [isAssetModalOpen, setIsAssetModalOpen] = useState(false);
   const navigate = useNavigate();
@@ -84,6 +84,7 @@ export default function Navbar({ variant = 'light', user, onLogin, onLogout }) {
         isOpen={isAssetModalOpen}
         onClose={() => setIsAssetModalOpen(false)}
         user={user}
+        onAssetAdded={onAssetAdded}
       />
     </nav>
   );

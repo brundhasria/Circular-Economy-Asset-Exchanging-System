@@ -45,8 +45,8 @@ public class DataLoader implements CommandLineRunner {
             System.out.println(">>> Seeded demo user (password123) <<<");
         }
 
-        // Always reload fresh demo assets with images
-        assetRepository.deleteAll();
+        // Only seed demo assets if the database has no assets yet
+        if (assetRepository.count() == 0) {
 
         List<Asset> sampleAssets = Arrays.asList(
             // --- Electronics ---
@@ -179,6 +179,7 @@ public class DataLoader implements CommandLineRunner {
 
         assetRepository.saveAll(sampleAssets);
         System.out.println(">>> 24 Sample assets with high-quality, verified images loaded into H2 Database! <<<");
+        }
     }
 
     private Asset createAsset(String type, String title, String condition, String location, 

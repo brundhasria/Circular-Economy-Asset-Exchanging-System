@@ -146,7 +146,7 @@ export default function DashboardPage() {
 
   return (
     <div className={styles.page}>
-      <Navbar variant="dark" user={user} onLogout={handleLogout} />
+      <Navbar variant="dark" user={user} onLogout={handleLogout} onAssetAdded={fetchDashboardData} />
 
       {toast && (
         <div style={{
