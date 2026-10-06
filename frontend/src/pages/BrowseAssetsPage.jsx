@@ -33,9 +33,11 @@ export default function BrowseAssetsPage() {
     fetch(`${BACKEND_URL}/api/assets`)
       .then(res => res.json())
       .then(data => {
-        const availableOnly = data.filter(a => a.status === 'Available');
-        setAssets(availableOnly);
-        setFiltered(availableOnly);
+        if (Array.isArray(data)) {
+          const availableOnly = data.filter(a => a.status === 'Available' || !a.status);
+          setAssets(availableOnly);
+          setFiltered(availableOnly);
+        }
       })
       .catch(() => console.error('Backend not reachable.'));
   };

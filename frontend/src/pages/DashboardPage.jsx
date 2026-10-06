@@ -41,10 +41,12 @@ export default function DashboardPage() {
     fetch(`${API_BASE_URL}/api/assets`)
       .then(res => res.json())
       .then(data => {
-        const listed = data.filter(a => a.listedBy === user);
-        const purchased = data.filter(a => a.acquiredBy === user);
-        setListedAssets(listed);
-        setPurchasedAssets(purchased);
+        if (Array.isArray(data)) {
+          const listed = data.filter(a => a.listedBy === user);
+          const purchased = data.filter(a => a.acquiredBy === user);
+          setListedAssets(listed);
+          setPurchasedAssets(purchased);
+        }
       })
       .catch(err => console.error("Error fetching dashboard assets:", err));
 
