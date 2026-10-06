@@ -30,6 +30,11 @@ public class AssetController {
     @Autowired
     private AssetRepository assetRepository;
 
+    @GetMapping("/ping")
+    public ResponseEntity<Map<String, String>> ping() {
+        return ResponseEntity.ok(Map.of("status", "UP", "timestamp", String.valueOf(System.currentTimeMillis())));
+    }
+
     @GetMapping
     public List<Asset> getAssets(
             @RequestParam(required = false) String type,

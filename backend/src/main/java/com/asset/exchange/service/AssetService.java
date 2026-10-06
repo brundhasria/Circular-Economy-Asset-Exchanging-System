@@ -12,6 +12,9 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.CacheEvict;
+
 @Service
 public class AssetService {
 
@@ -21,6 +24,7 @@ public class AssetService {
     @Autowired
     private UserRepository userRepository;
 
+    @Cacheable(value = "assets")
     public List<Asset> getAllAssets() {
         return assetRepository.findAll();
     }
@@ -37,6 +41,7 @@ public class AssetService {
         return assetRepository.findByAssetCondition(condition);
     }
 
+    @CacheEvict(value = "assets", allEntries = true)
     public Asset addAsset(Asset asset) {
         asset.setStatus("Available");
         if (asset.getListingType() == null || asset.getListingType().isEmpty()) {
@@ -47,6 +52,7 @@ public class AssetService {
 
     // Optimistic Locking for concurrency protection
     @Transactional
+    @CacheEvict(value = "assets", allEntries = true)
     public Asset exchangeAsset(Long id, String username) {
         Asset asset = assetRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Asset not found"));
@@ -79,6 +85,7 @@ public class AssetService {
     }
 
     @Transactional
+    @CacheEvict(value = "assets", allEntries = true)
     public Asset recycleAsset(Long id, String username) {
         Asset asset = assetRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Asset not found"));
